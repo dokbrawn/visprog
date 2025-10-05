@@ -1,8 +1,8 @@
-# Практическое задание: "Ходячий"
+# РџСЂР°РєС‚РёС‡РµСЃРєРѕРµ Р·Р°РґР°РЅРёРµ: "РҐРѕРґСЏС‡РёР№" вЂ” GaussвЂ“Markov Mobility Model
 
-## Запуск
-1. Установите JDK (11+).  
-2. Сборка и запуск из IntelliJ или через Maven/Gradle, либо:
+## Р—Р°РїСѓСЃРє
+1. РЈСЃС‚Р°РЅРѕРІРёС‚Рµ JDK (11+).  
+2. РЎР±РѕСЂРєР° Рё Р·Р°РїСѓСЃРє РёР· IntelliJ РёР»Рё С‡РµСЂРµР· Maven/Gradle, Р»РёР±Рѕ:
    ```bash
    javac -d out src/main/java/com/dokbrawn/visprog/*.java
    java -cp out com.dokbrawn.visprog.Main
