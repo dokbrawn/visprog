@@ -5,13 +5,14 @@ import java.util.Random;
 public class Human {
     private String fullName;
     private int age;
-    private double currentSpeed;
-    private double x, y;
-    private double vx, vy;
+    private double currentSpeed;   // мгновенна€ скорость (м/с)
+    private double x, y;           // позици€ в декартовой системе (метры)
+    private double vx, vy;         // компоненты скорости (м/с)
 
-    private final double alpha;
-    private final double vBar;
-    private final double sigma;
+    // ѕараметры модели Gauss-Markov
+    private final double alpha;    // пам€ть скорости (0..1)
+    private final double vBar;     // средн€€ желаема€ скорость (м/с)
+    private final double sigma;    // дисперси€ шума
     private final Random rnd;
 
     public Human(String fullName, int age, double x0, double y0,
@@ -30,12 +31,27 @@ public class Human {
         this.rnd = (rnd == null) ? new Random() : rnd;
     }
 
+    // √еттеры и сеттеры
     public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+
     public int getAge() { return age; }
+    public void setAge(int age) { this.age = age; }
+
     public double getCurrentSpeed() { return currentSpeed; }
+    public void setCurrentSpeed(double currentSpeed) { this.currentSpeed = currentSpeed; }
+
     public double getX() { return x; }
     public double getY() { return y; }
+    public double getVx() { return vx; }
+    public double getVy() { return vy; }
 
+    public void setX(double x) { this.x = x; }
+    public void setY(double y) { this.y = y; }
+    public void setVx(double vx) { this.vx = vx; }
+    public void setVy(double vy) { this.vy = vy; }
+
+    // ћетод move() Ч шаг модели Gauss-Markov за dt секунд
     public void move(double dt) {
         double speed = Math.hypot(vx, vy);
         double ux, uy;
@@ -65,6 +81,7 @@ public class Human {
 
     @Override
     public String toString() {
-        return String.format("%s (age %d) Ч pos=(%.3f, %.3f) speed=%.3f", fullName, age, x, y, currentSpeed);
+        return String.format("%s (age %d) Ч pos=(%.3f, %.3f) speed=%.3f",
+                fullName, age, x, y, currentSpeed);
     }
 }
