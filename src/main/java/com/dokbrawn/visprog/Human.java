@@ -2,7 +2,7 @@ package com.dokbrawn.visprog;
 
 import java.util.Random;
 
-public class Human {
+public class Human implements Movable {
     private String name;
     private int age;
     private double x, y;
@@ -11,7 +11,9 @@ public class Human {
     private double alpha, vBar, sigma;
     private Random rnd;
 
-    public Human(String name, int age, double x, double y, double vx, double vy, double alpha, double vBar, double sigma, Random rnd) {
+    public Human(String name, int age, double x, double y,
+                 double vx, double vy, double alpha, double vBar,
+                 double sigma, Random rnd) {
         this.name = name;
         this.age = age;
         this.x = x;
@@ -25,18 +27,22 @@ public class Human {
         this.currentSpeed = Math.sqrt(vx*vx + vy*vy);
     }
 
+    @Override
     public void move(double dt) {
-        vx = alpha*vx + (1-alpha)*vBar + sigma*rnd.nextGaussian();
-        vy = alpha*vy + (1-alpha)*vBar + sigma*rnd.nextGaussian();
-        x += vx*dt;
-        y += vy*dt;
+        vx = alpha * vx + (1-alpha) * vBar + sigma * rnd.nextGaussian();
+        vy = alpha * vy + (1-alpha) * vBar + sigma * rnd.nextGaussian();
+        x += vx * dt;
+        y += vy * dt;
         currentSpeed = Math.sqrt(vx*vx + vy*vy);
     }
 
+    @Override
     public double getX() { return x; }
+    @Override
     public double getY() { return y; }
+    @Override
     public double getCurrentSpeed() { return currentSpeed; }
-    public String getName() { return name; }
-    public void setX(double x) { this.x = x; }
-    public void setY(double y) { this.y = y; }
+
+    @Override
+    public String toString() { return name; }
 }

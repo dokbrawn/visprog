@@ -1,34 +1,38 @@
 package com.dokbrawn.visprog;
 
 import java.util.Random;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
-        Human h1 = new Human(""Alice"", 20, 0, 0, 1, 0.5, 0.85, 1.2, 0.4, new Random());
-        Human h2 = new Human(""Bob"", 21, 1, 0, 1, 0.5, 0.85, 1.2, 0.4, new Random());
-        Driver d1 = new Driver(""Charlie"", 25, 0, 0, 1, 0);
+    public static void main(String[] args) {
+        int N = 3;
+        double dt = 0.5;
 
-        List<Runnable> movers = new ArrayList<>();
-        movers.add(h1::move);
-        movers.add(h2::move);
-        movers.add(d1);
+        Human[] humans = new Human[N];
+        Random rnd = new Random(123);
 
-        List<Thread> threads = new ArrayList<>();
-        for(Runnable r : movers){
-            Thread t = new Thread(r);
-            threads.add(t);
-            t.start();
+        for (int i=0; i<N; i++) {
+            humans[i] = new Human(""Person_""+(i+1), 20+i, i, 0, 1, 1, 0.85, 1.2, 0.4, rnd);
         }
 
-        for(Thread t : threads){
-            t.join();
+        Driver driver = new Driver(""Driver1"", 30, 0, 0, 1.5);
+
+        Thread[] threads = new Thread[N+1];
+        for (int i=0; i<N; i++) {
+            int idx = i;
+            threads[i] = new Thread(() -> humans[idx].move(dt));
+        }
+        threads[N] = new Thread(driver);
+
+        for (Thread t: threads) t.start();
+        for (Thread t: threads) {
+            try { t.join(); } catch (InterruptedException e) { e.printStackTrace(); }
         }
 
-        System.out.println(""Позиции после одного шага:"");
-        System.out.printf(""Alice: (%.2f, %.2f)\n"", h1.getX(), h1.getY());
-        System.out.printf(""Bob:   (%.2f, %.2f)\n"", h2.getX(), h2.getY());
-        System.out.printf(""Charlie: (%.2f, %.2f)\n"", d1.getX(), d1.getY());
+        for (Human h: humans) {
+            System.out.printf(""%s: x=%.2f y=%.2f speed=%.2f%n"",
+                    h.toString(), h.getX(), h.getY(), h.getCurrentSpeed());
+        }
+        System.out.printf(""%s: x=%.2f y=%.2f speed=%.2f%n"",
+                driver.toString(), driver.getX(), driver.getY(), driver.getCurrentSpeed());
     }
 }
