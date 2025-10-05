@@ -12,7 +12,7 @@
 - Main.java — демонстрация параллельного движения Human и Driver с использованием потоков.
 
 ## Запуск
-\\\ash
+\\\
 javac -d out src/main/java/com/dokbrawn/visprog/*.java
 java -cp out com.dokbrawn.visprog.Main
 \\\
