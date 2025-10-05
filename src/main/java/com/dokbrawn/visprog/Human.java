@@ -37,4 +37,6 @@ public class Human {
     public double getY() { return y; }
     public double getCurrentSpeed() { return currentSpeed; }
     public String getName() { return name; }
+    public void setX(double x) { this.x = x; }
+    public void setY(double y) { this.y = y; }
 }

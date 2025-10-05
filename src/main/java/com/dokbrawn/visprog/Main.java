@@ -1,51 +1,34 @@
 package com.dokbrawn.visprog;
 
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.IOException;
 import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        int groupNumber = 5;
-        int N = groupNumber;
-        double simulationSeconds = 30.0;
-        double dt = 0.5;
+    public static void main(String[] args) throws InterruptedException {
+        Human h1 = new Human(""Alice"", 20, 0, 0, 1, 0.5, 0.85, 1.2, 0.4, new Random());
+        Human h2 = new Human(""Bob"", 21, 1, 0, 1, 0.5, 0.85, 1.2, 0.4, new Random());
+        Driver d1 = new Driver(""Charlie"", 25, 0, 0, 1, 0);
 
-        Human[] people = new Human[N];
-        Random rnd = new Random(12345);
+        List<Runnable> movers = new ArrayList<>();
+        movers.add(h1::move);
+        movers.add(h2::move);
+        movers.add(d1);
 
-        double alpha = 0.85;
-        double vBar = 1.2;
-        double sigma = 0.4;
-
-        for (int i = 0; i < N; i++) {
-            double x0 = i*1.0;
-            double y0 = 0.0;
-            double initVx = vBar*Math.cos(i*0.5);
-            double initVy = vBar*Math.sin(i*0.5);
-            people[i] = new Human(""Person_"" + (i+1), 20+i, x0, y0, initVx, initVy, alpha, vBar, sigma, rnd);
+        List<Thread> threads = new ArrayList<>();
+        for(Runnable r : movers){
+            Thread t = new Thread(r);
+            threads.add(t);
+            t.start();
         }
 
-        int steps = (int)Math.ceil(simulationSeconds/dt);
-        String csvName = ""trajectories.csv"";
-
-        try (PrintWriter pw = new PrintWriter(new FileWriter(csvName))) {
-            pw.println(""time,id,x,y,speed"");
-            double time = 0.0;
-            for (int step = 0; step < steps; step++) {
-                for (int i = 0; i < N; i++) {
-                    people[i].move(dt);
-                }
-                time += dt;
-                for (int i = 0; i < N; i++) {
-                    Human h = people[i];
-                    pw.printf(""%.3f,%d,%.6f,%.6f,%.6f%n"", time, i+1, h.getX(), h.getY(), h.getCurrentSpeed());
-                }
-            }
-            System.out.println(""Лог траекторий записан в "" + csvName);
+        for(Thread t : threads){
+            t.join();
         }
 
-        System.out.println(""Симуляция завершена."");
+        System.out.println(""Позиции после одного шага:"");
+        System.out.printf(""Alice: (%.2f, %.2f)\n"", h1.getX(), h1.getY());
+        System.out.printf(""Bob:   (%.2f, %.2f)\n"", h2.getX(), h2.getY());
+        System.out.printf(""Charlie: (%.2f, %.2f)\n"", d1.getX(), d1.getY());
     }
 }
