@@ -35,30 +35,27 @@
 
 ## Математическая формулировка модели
 
-Пусть в момент времени \(t\) скорость агента равна вектору
+Пусть в момент времени \(t\) скорость агента равна вектору  
 \[
-\mathbf{v}_t = (v_{x,t},\; v_{y,t}),
-\]
-а установившийся (средний) вектор скорости равен
+\mathbf{v}_t = (v_{x,t}, v_{y,t}),
+\]  
+а средний вектор скорости:  
 \[
-\bar{\mathbf{v}} = (\bar{v}_x,\; \bar{v}_y).
+\bar{\mathbf{v}} = (\bar{v}_x, \bar{v}_y).
 \]
 
-Тогда обновление скорости при шаге времени \(\Delta t\) задаётся формулой
+Тогда обновление скорости:
 $$
-\mathbf{v}_{t+\Delta t} = \alpha \,\mathbf{v}_t
-    + (1-\alpha)\,\bar{\mathbf{v}}
-    + \sqrt{1-\alpha^2}\,\sigma\,\boldsymbol{\xi}_t,
+\mathbf{v}_{t + \Delta t} = \alpha \mathbf{v}_t + (1 - \alpha)\, \bar{\mathbf{v}} + \sqrt{1 - \alpha^2}\,\sigma\, \boldsymbol{\xi}_t,
 $$
-где \(0 \le \alpha \le 1\) — параметр памяти, \(\sigma\) — масштаб гауссовского шума, а
-\(\boldsymbol{\xi}_t = (\xi_{x,t},\xi_{y,t})\) — вектор независимых стандартных нормальных случайных величин
-\(\xi_{i,t}\sim\mathcal{N}(0,1)\).
+где \(\boldsymbol{\xi}_t = (\xi_{x,t}, \xi_{y,t})\), \(\xi_{i,t} \sim \mathcal{N}(0,1)\).
 
-После обновления скорости положение интегрируется явным методом Эйлера:
+Позиция обновляется:
 $$
-x_{t+\Delta t} = x_t + v_{x,t+\Delta t}\,\Delta t, \qquad
-y_{t+\Delta t} = y_t + v_{y,t+\Delta t}\,\Delta t.
+x_{t + \Delta t} = x_t + v_{x, t + \Delta t} \cdot \Delta t, \qquad
+y_{t + \Delta t} = y_t + v_{y, t + \Delta t} \cdot \Delta t.
 $$
+
 
 
 **Пояснения:**
