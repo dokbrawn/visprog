@@ -39,22 +39,25 @@
 \[
 \mathbf{v}_t = (v_{x,t}, v_{y,t}),
 \]  
-а средний вектор скорости:  
+а средний (установившийся) вектор скорости:  
 \[
 \bar{\mathbf{v}} = (\bar{v}_x, \bar{v}_y).
 \]
 
 Тогда обновление скорости:
 $$
-\mathbf{v}_{t + \Delta t} = \alpha \mathbf{v}_t + (1 - \alpha)\, \bar{\mathbf{v}} + \sqrt{1 - \alpha^2}\,\sigma\, \boldsymbol{\xi}_t,
+\mathbf{v}_{t + \Delta t} = \alpha \,\mathbf{v}_t
+    + (1 - \alpha)\,\bar{\mathbf{v}}
+    + \sqrt{\,1 - \alpha^2\,}\;\sigma\;\boldsymbol{\xi}_t,
 $$
 где \(\boldsymbol{\xi}_t = (\xi_{x,t}, \xi_{y,t})\), \(\xi_{i,t} \sim \mathcal{N}(0,1)\).
 
-Позиция обновляется:
+Позиция обновляется по формулам:
 $$
-x_{t + \Delta t} = x_t + v_{x, t + \Delta t} \cdot \Delta t, \qquad
-y_{t + \Delta t} = y_t + v_{y, t + \Delta t} \cdot \Delta t.
+x_{t + \Delta t} = x_t + v_{x,\,t + \Delta t}\, \Delta t, \qquad
+y_{t + \Delta t} = y_t + v_{y,\,t + \Delta t}\, \Delta t.
 $$
+
 
 
 
