@@ -10,13 +10,13 @@ public class Driver extends Human implements Runnable {
 
     @Override
     public void move(double dt) {
-        // прямолинейное движение
+        
         setX(getX() + speed*dt);
         setY(getY());
     }
 
     @Override
     public void run() {
-        move(0.5); // шаг времени можно менять
+        move(0.5);
     }
 }
