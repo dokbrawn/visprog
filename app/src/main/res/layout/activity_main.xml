@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:context=".MainActivity">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="4"
+        android:rowCount="2"
+        android:useDefaultMargins="true">
+
+        <Button android:id="@+id/btn_player" android:text="Player" android:layout_width="0dp" android:layout_columnWeight="1" android:textSize="14sp" />
+        <Button android:id="@+id/btn_views" android:text="Views" android:layout_width="0dp" android:layout_columnWeight="1" android:textSize="14sp" />
+        <Button android:id="@+id/btn_location" android:text="Location" android:layout_width="0dp" android:layout_columnWeight="1" android:textSize="14sp" />
+        <Button android:id="@+id/btn_telephony" android:text="Telephony" android:layout_width="0dp" android:layout_columnWeight="1" android:textSize="14sp" />
+
+        <Button android:id="@+id/btn_calculator" android:text="Calculator" android:layout_width="0dp" android:layout_columnWeight="1" android:textSize="14sp" />
+        <Button android:id="@+id/btn_sockets" android:text="Sockets" android:layout_width="0dp" android:layout_columnWeight="1" android:textSize="14sp" />
+        <Button android:id="@+id/btn_generic1" android:text="Button" android:layout_width="0dp" android:layout_columnWeight="1" android:textSize="14sp" />
+        <Button android:id="@+id/btn_generic2" android:text="Button" android:layout_width="0dp" android:layout_columnWeight="1" android:textSize="14sp" />
+    </GridLayout>
+</LinearLayout>
