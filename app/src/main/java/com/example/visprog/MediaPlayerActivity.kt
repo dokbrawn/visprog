@@ -1,4 +1,4 @@
-package com.example.visprog
+﻿package com.example.visprog
 
 import android.Manifest
 import android.content.Context
@@ -9,14 +9,15 @@ import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
-import android.os.Looper
 import android.provider.MediaStore
+import android.view.KeyEvent
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import java.io.File
+import android.os.Handler
+import android.os.Looper
 
 class MediaPlayerActivity : AppCompatActivity() {
 
@@ -63,8 +64,14 @@ class MediaPlayerActivity : AppCompatActivity() {
 
         seekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(bar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser && player?.isPlaying == true) {
-                    player?.seekTo(progress)
+                if (fromUser) {
+                    try {
+                        if (player?.isPlaying == true) {
+                            player?.seekTo(progress)
+                        }
+                    } catch (e: IllegalStateException) {
+                        // Player might be in an invalid state, ignore.
+                    }
                 }
             }
 
@@ -77,11 +84,15 @@ class MediaPlayerActivity : AppCompatActivity() {
 
     private fun startUpdatingSeekBar() {
         runnable = Runnable {
-            if (player != null && player!!.isPlaying) {
-                val currentPosition = player!!.currentPosition
-                seekBar?.progress = currentPosition
-                currentTimeText?.text = formatTime(currentPosition)
-                handler.postDelayed(runnable, 1000)
+            try {
+                if (player != null && player!!.isPlaying) {
+                    val currentPosition = player!!.currentPosition
+                    seekBar?.progress = currentPosition
+                    currentTimeText?.text = formatTime(currentPosition)
+                    handler.postDelayed(runnable, 1000)
+                }
+            } catch (e: IllegalStateException) {
+                // Player might be in an invalid state, just stop updating.
             }
         }
         handler.post(runnable)
@@ -107,52 +118,61 @@ class MediaPlayerActivity : AppCompatActivity() {
 
         if (player == null) {
             playSongAtIndex(currentSong)
-        } else if (player?.isPlaying == true) {
-            player?.pause()
-            playButton?.setImageResource(android.R.drawable.ic_media_play)
-            stopUpdatingSeekBar()
-        } else {
-            player?.start()
-            playButton?.setImageResource(android.R.drawable.ic_media_pause)
-            startUpdatingSeekBar()
+            return
+        }
+
+        try {
+            if (player!!.isPlaying) {
+                player?.pause()
+                playButton?.setImageResource(android.R.drawable.ic_media_play)
+                stopUpdatingSeekBar()
+            } else {
+                player?.start()
+                playButton?.setImageResource(android.R.drawable.ic_media_pause)
+                startUpdatingSeekBar()
+            }
+        } catch (e: IllegalStateException) {
+            stopMusic()
+            playSongAtIndex(currentSong)
         }
     }
 
     private fun stopMusic() {
         stopUpdatingSeekBar()
         player?.apply {
-            stop()
-            release()
+            try {
+                if (isPlaying) stop()
+                release()
+            } catch (e: Exception) {
+                // Ignore errors on stopping
+            }
         }
         player = null
         playButton?.setImageResource(android.R.drawable.ic_media_play)
         seekBar?.progress = 0
-        titleText?.text = "Название трека"
-        currentTimeText?.text = "0:00"
-        totalTimeText?.text = "0:00"
-        currentSong = -1
     }
 
     private fun playPreviousSong() {
-        if (currentSong <= 0) {
-            Toast.makeText(this, "Это первая песня", Toast.LENGTH_SHORT).show()
-            return
-        }
-        playSongAtIndex(currentSong - 1)
+        if (musicFiles.isEmpty()) return
+        currentSong = if (currentSong > 0) currentSong - 1 else musicFiles.size - 1
+        playSongAtIndex(currentSong)
     }
 
     private fun playNextSong() {
-        if (currentSong >= musicFiles.size - 1) {
-            Toast.makeText(this, "Это последняя песня", Toast.LENGTH_SHORT).show()
-            return
-        }
-        playSongAtIndex(currentSong + 1)
+        if (musicFiles.isEmpty()) return
+        currentSong = (currentSong + 1) % musicFiles.size
+        playSongAtIndex(currentSong)
     }
 
     private fun playSongAtIndex(index: Int) {
         stopMusic()
 
         currentSong = index
+        if (musicFiles.isEmpty() || index >= musicFiles.size) {
+            Toast.makeText(this, "Ошибка: Неверный индекс песни", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val file = musicFiles[index]
         val title = musicTitles[index]
 
@@ -166,23 +186,31 @@ class MediaPlayerActivity : AppCompatActivity() {
                 )
                 setDataSource(file.absolutePath)
                 setOnPreparedListener {
-                    start()
-                    titleText?.text = title
-                    playButton?.setImageResource(android.R.drawable.ic_media_pause)
-                    seekBar?.max = duration
-                    seekBar?.progress = 0
-                    totalTimeText?.text = formatTime(duration)
-                    startUpdatingSeekBar()
+                    try {
+                        start()
+                        titleText?.text = title
+                        playButton?.setImageResource(android.R.drawable.ic_media_pause)
+                        seekBar?.max = duration
+                        seekBar?.progress = 0
+                        totalTimeText?.text = formatTime(duration)
+                        startUpdatingSeekBar()
+                    } catch (e: IllegalStateException) {
+                        Toast.makeText(this@MediaPlayerActivity, "Ошибка воспроизведения", Toast.LENGTH_SHORT).show()
+                        stopMusic()
+                    }
                 }
                 setOnCompletionListener {
+                    playNextSong()
+                }
+                setOnErrorListener { _, _, _ ->
+                    Toast.makeText(this@MediaPlayerActivity, "Ошибка: не удается воспроизвести файл", Toast.LENGTH_SHORT).show()
                     stopMusic()
-                    titleText?.text = "Название трека"
+                    true
                 }
                 prepareAsync()
             } catch (e: Exception) {
-                Toast.makeText(this@MediaPlayerActivity, "Ошибка: ${e.message}", Toast.LENGTH_LONG).show()
-                release()
-                player = null
+                Toast.makeText(this@MediaPlayerActivity, "Ошибка: не удается загрузить файл", Toast.LENGTH_LONG).show()
+                stopMusic()
             }
         }
     }
@@ -208,12 +236,30 @@ class MediaPlayerActivity : AppCompatActivity() {
         }
     }
 
+    // Handle hardware volume keys
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            audioManager?.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI)
+            volumeBar?.progress = audioManager?.getStreamVolume(AudioManager.STREAM_MUSIC) ?: 0
+            return true
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            audioManager?.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI)
+            volumeBar?.progress = audioManager?.getStreamVolume(AudioManager.STREAM_MUSIC) ?: 0
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
     override fun onPause() {
         super.onPause()
-        if (player?.isPlaying == true) {
-            player?.pause()
-            playButton?.setImageResource(android.R.drawable.ic_media_play)
-            stopUpdatingSeekBar()
+        try {
+            if (player != null && player!!.isPlaying) {
+                player!!.pause()
+                playButton?.setImageResource(android.R.drawable.ic_media_play)
+                stopUpdatingSeekBar()
+            }
+        } catch (e: IllegalStateException) {
+            // Ignore exception if player is in a bad state
         }
     }
 
@@ -246,54 +292,58 @@ class MediaPlayerActivity : AppCompatActivity() {
         }
     }
 
-
     private fun loadAllMusic() {
-        val fileList = mutableListOf<File>()
-        val titleList = mutableListOf<String>()
+        Thread {
+            val fileList = mutableListOf<File>()
+            val titleList = mutableListOf<String>()
 
-        val projection = arrayOf(
-            MediaStore.Audio.Media.DATA,
-            MediaStore.Audio.Media.TITLE
-        )
+            val projection = arrayOf(
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.TITLE
+            )
 
+            val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
+            val folderPath = if (musicDir.endsWith("/")) musicDir else "$musicDir/"
 
-        val musicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
-        val folderPath = if (musicDir.endsWith("/")) musicDir else "$musicDir/"
+            val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0 AND ${MediaStore.Audio.Media.DATA} LIKE ?"
+            val selectionArgs = arrayOf("${folderPath}%")
 
+            try {
+                contentResolver.query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null
+                )?.use { cursor ->
+                    val dataIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+                    val titleIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
 
-        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0 AND ${MediaStore.Audio.Media.DATA} LIKE ?"
-        val selectionArgs = arrayOf("${folderPath}%")
+                    while (cursor.moveToNext()) {
+                        val path = cursor.getString(dataIndex)
+                        val title = cursor.getString(titleIndex)
+                        val file = File(path)
 
-        contentResolver.query(
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-            projection,
-            selection,
-            selectionArgs,
-            null
-        )?.use { cursor ->
-            val dataIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
-            val titleIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
+                        if (file.exists() && !file.isDirectory) {
+                            fileList.add(file)
+                            titleList.add(title)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                // Handle potential exceptions during query
+            }
 
-            while (cursor.moveToNext()) {
-                val path = cursor.getString(dataIndex)
-                val title = cursor.getString(titleIndex)
-                val file = File(path)
-
-                if (file.exists() && !file.isDirectory) {
-                    fileList.add(file)
-                    titleList.add(title)
+            runOnUiThread {
+                if (fileList.isEmpty()) {
+                    Toast.makeText(this, "Музыка не найдена в папке Music/", Toast.LENGTH_LONG).show()
+                } else {
+                    musicFiles = fileList.toTypedArray()
+                    musicTitles = titleList.toTypedArray()
+                    showMusicList()
                 }
             }
-        }
-
-        if (fileList.isEmpty()) {
-            Toast.makeText(this, "Музыка не найдена в папке Music/", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        musicFiles = fileList.toTypedArray()
-        musicTitles = titleList.toTypedArray()
-        showMusicList()
+        }.start()
     }
 
     private fun showMusicList() {
