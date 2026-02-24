@@ -20,6 +20,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.*
 import com.google.gson.Gson
+import kotlinx.coroutines.*
+import org.zeromq.SocketType
+import org.zeromq.ZMQ
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -31,6 +34,15 @@ class TelephonyService : Service() {
     private val scheduler = Executors.newScheduledThreadPool(1)
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+
+    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
+    data class LocationData(
+        val latitude: Double,
+        val longitude: Double,
+        val altitude: Double,
+        val time: Long
+    )
 
     override fun onCreate() {
         super.onCreate()
@@ -57,10 +69,11 @@ class TelephonyService : Service() {
     private fun startDataCollection() {
         val dataCollectionTask = Runnable { 
             collectTelephonyData()
-            collectLocationData()
             collectNetworkUsageData()
         }
         scheduler.scheduleWithFixedDelay(dataCollectionTask, 0, 15, TimeUnit.SECONDS)
+        
+        collectLocationData()
     }
 
     private fun collectTelephonyData() {
@@ -77,6 +90,30 @@ class TelephonyService : Service() {
         Log.d(TAG, "Telephony Data: $cellInfoJson")
     }
 
+    private fun sendDataToServer(data: String) {
+        serviceScope.launch {
+            ZMQ.context(1).use { context ->
+                context.socket(SocketType.REQ).use { socket ->
+                    try {
+                        val serverIp = "192.168.0.11"
+                        socket.connect("tcp://$serverIp:5556")
+                        socket.receiveTimeOut = 5000
+
+                        Log.d(TAG, "Sending data: $data")
+                        socket.send(data.toByteArray(ZMQ.CHARSET))
+
+                        val reply = socket.recvStr(0)
+                        Log.d(TAG, "Received reply from server: $reply")
+
+                    } catch (e: Exception) {
+                        Log.e(TAG, "ZMQ Error while sending data: " + e.message)
+                    }
+                }
+            }
+        }
+    }
+
+
     private fun collectLocationData() {
         val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
             .setMinUpdateIntervalMillis(5000)
@@ -85,15 +122,24 @@ class TelephonyService : Service() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
-                    val locationJson = gson.toJson(location)
+                    val locationData = LocationData(
+                        latitude = location.latitude,
+                        longitude = location.longitude,
+                        altitude = location.altitude,
+                        time = location.time
+                    )
+                    val locationJson = gson.toJson(locationData)
                     Log.d(TAG, "Location Data: $locationJson")
+                    sendDataToServer(locationJson)
                 }
             }
         }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "Location permission not granted")
             return
         }
+        Log.d(TAG, "Requesting location updates")
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
 
@@ -118,6 +164,7 @@ class TelephonyService : Service() {
         if(this::locationCallback.isInitialized) {
             fusedLocationClient.removeLocationUpdates(locationCallback)
         }
+        serviceScope.cancel()
         Log.d(TAG, "TelephonyService stopped")
     }
 

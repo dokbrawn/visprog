@@ -144,7 +144,6 @@ class MediaPlayerActivity : AppCompatActivity() {
                 if (isPlaying) stop()
                 release()
             } catch (e: Exception) {
-                // Ignore errors on stopping
             }
         }
         player = null

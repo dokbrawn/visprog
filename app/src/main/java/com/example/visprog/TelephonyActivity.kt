@@ -120,7 +120,6 @@ class TelephonyActivity : AppCompatActivity() {
                 is CellInfoLte -> sb.append(formatLteInfo(info))
                 is CellInfoGsm -> sb.append(formatGsmInfo(info))
                 is CellInfoNr -> sb.append(formatNrInfo(info))
-                // Можно добавить Wcdma или Cdma при необходимости
             }
             sb.append("\n------------------\n")
         }

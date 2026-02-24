@@ -47,7 +47,6 @@ class SocketsActivity : AppCompatActivity() {
     private fun startAndroidClient(serverIp: String) {
         thread {
             val clientSocket = context.createSocket(SocketType.REQ)
-            // ИЗМЕНЕНИЕ: Подключаемся к порту 5556
             val serverAddress = "tcp://$serverIp:5556"
             uiHandler.post { statusTextView.text = "Connecting to $serverAddress" }
             clientSocket.connect(serverAddress)
@@ -62,7 +61,7 @@ class SocketsActivity : AppCompatActivity() {
 
             uiHandler.post {
                 statusTextView.append("\nServer replied: $replyText")
-                startButton.isEnabled = true // Можно отправить снова
+                startButton.isEnabled = true
             }
 
             clientSocket.close()
