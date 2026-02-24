@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".TelephonyActivity">
+
+    <TextView
+        android:id="@+id/tv_telephony_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Данные мобильной сети"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <Button
+        android:id="@+id/btn_open_sockets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Open Sockets"
+        app:layout_constraintTop_toBottomOf="@id/tv_telephony_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_start_service"/>
+
+    <Button
+        android:id="@+id/btn_start_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Start Service"
+        app:layout_constraintTop_toBottomOf="@id/tv_telephony_title"
+        app:layout_constraintStart_toEndOf="@+id/btn_open_sockets"
+        app:layout_constraintEnd_toStartOf="@+id/btn_stop_service"/>
+
+    <Button
+        android:id="@+id/btn_stop_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Stop Service"
+        app:layout_constraintTop_toBottomOf="@id/tv_telephony_title"
+        app:layout_constraintStart_toEndOf="@+id/btn_start_service"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_start_service">
+
+        <TextView
+            android:id="@+id/tv_telephony_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Получение данных..."
+            android:textSize="14sp" />
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

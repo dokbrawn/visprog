@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_player"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="Player"
+        app:layout_constraintEnd_toStartOf="@+id/btn_views"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_views"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="Views"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_player"
+        app:layout_constraintTop_toTopOf="@+id/btn_player" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_calculator"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Calculator"
+        app:layout_constraintEnd_toEndOf="@+id/btn_player"
+        app:layout_constraintStart_toStartOf="@+id/btn_player"
+        app:layout_constraintTop_toBottomOf="@+id/btn_player" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_location"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Location"
+        app:layout_constraintEnd_toEndOf="@+id/btn_views"
+        app:layout_constraintStart_toStartOf="@+id/btn_views"
+        app:layout_constraintTop_toTopOf="@+id/btn_calculator" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_sockets"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="ZMQ"
+        app:layout_constraintEnd_toEndOf="@+id/btn_calculator"
+        app:layout_constraintStart_toStartOf="@+id/btn_calculator"
+        app:layout_constraintTop_toBottomOf="@+id/btn_calculator" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_telephony"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Telephony"
+        app:layout_constraintEnd_toEndOf="@+id/btn_location"
+        app:layout_constraintStart_toStartOf="@+id/btn_location"
+        app:layout_constraintTop_toTopOf="@+id/btn_sockets" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
