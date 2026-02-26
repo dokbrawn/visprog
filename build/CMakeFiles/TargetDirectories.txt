@@ -1,0 +1,5 @@
+C:/Users/tanis/AndroidStudioProjects/imgui_demo/build/CMakeFiles/imgui.dir
+C:/Users/tanis/AndroidStudioProjects/imgui_demo/build/CMakeFiles/implot.dir
+C:/Users/tanis/AndroidStudioProjects/imgui_demo/build/CMakeFiles/main.dir
+C:/Users/tanis/AndroidStudioProjects/imgui_demo/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/tanis/AndroidStudioProjects/imgui_demo/build/CMakeFiles/ZERO_CHECK.dir

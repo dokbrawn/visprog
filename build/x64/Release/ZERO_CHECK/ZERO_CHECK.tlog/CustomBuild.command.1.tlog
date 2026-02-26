@@ -1,0 +1,10 @@
+^C:\USERS\TANIS\ANDROIDSTUDIOPROJECTS\IMGUI_DEMO\BUILD\CMAKEFILES\005A588AC5E1F94542204935A85D6C0C\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/tanis/AndroidStudioProjects/imgui_demo -BC:/Users/tanis/AndroidStudioProjects/imgui_demo/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/tanis/AndroidStudioProjects/imgui_demo/build/imgui_demo.slnx
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
