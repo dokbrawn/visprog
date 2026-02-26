@@ -36,7 +36,7 @@ class LocationService : Service(), LocationListener {
         super.onCreate()
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         createNotificationChannel()
-        // Use the correct IP and port for the C++ server
+        
         zmqClient = ZeroMQClient("192.168.0.11", 5556)
         thread { zmqClient.start() }
     }
@@ -80,7 +80,7 @@ class LocationService : Service(), LocationListener {
         FileUtils.saveLocationToFile(file, locationData)
         thread { zmqClient.sendLocationData(locationData) }
 
-        // Broadcast the location update
+        
         val intent = Intent(ACTION_LOCATION_UPDATE).apply {
             putExtra("latitude", location.latitude)
             putExtra("longitude", location.longitude)
