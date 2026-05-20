@@ -1,9 +1,9 @@
-# Android learning
+# Android part
 Анисимов Тимур Юрьевич, ИКС-431
 
 ## Ссылки на репозитории
 - Android-проект (этот репозиторий): `visprog`
-- Бэкенд для ПАК (взяты только **названия практик**): [https://github.com/dokbrawn/vis_backENDer.git](https://github.com/dokbrawn/vis_backENDer.git)
+- Бэкенд для ПАК: [https://github.com/dokbrawn/vis_backENDer.git](https://github.com/dokbrawn/vis_backENDer.git)
 
 ## Описание проекта
 Репозиторий содержит Android-приложение по курсу «Визуальное программирование и человеко-машинное взаимодействие».
