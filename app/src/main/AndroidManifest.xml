@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.visprog">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32"
-        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL"/>
-    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS"/>
-    <uses-permission
-        android:name="android.permission.PACKAGE_USAGE_STATS"
-        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission" />
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
 
     <application
         android:allowBackup="true"
@@ -37,37 +32,37 @@
             android:name=".services.LocationService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="location"/>
+            android:foregroundServiceType="location" />
 
         <service
-            android:name=".TelephonyService"
+            android:name=".services.TelephonyService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="location|phoneCall" />
+            android:foregroundServiceType="location|dataSync" />
+
+        <service
+            android:name=".services.BackgroundService"
+            android:enabled="true"
+            android:exported="false" />
 
         <activity
-            android:name=".MediaPlayerActivity"
+            android:name=".ui.MediaPlayerActivity"
             android:exported="false"
             android:label="MP3 Проигрыватель" />
-        
         <activity
-            android:name=".Calculator"
+            android:name=".ui.Calculator"
             android:exported="false" />
-
         <activity
-            android:name=".LocationActivity"
+            android:name=".ui.LocationActivity"
             android:exported="false" />
-
         <activity
-            android:name=".SocketsActivity"
+            android:name=".ui.SocketsActivity"
             android:exported="false" />
-
         <activity
-            android:name="com.example.visprog.TelephonyActivity"
-            android.exported="false" />
-
+            android:name=".ui.TelephonyActivity"
+            android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -75,5 +70,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

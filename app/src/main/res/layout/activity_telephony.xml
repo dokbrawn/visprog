@@ -18,24 +18,45 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
+    <EditText
+        android:id="@+id/et_server_ip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Server IP (e.g., 192.168.0.11)"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@id/tv_telephony_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_set_server" />
+
     <Button
-        android:id="@+id/btn_open_sockets"
+        android:id="@+id/btn_set_server"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Open Sockets"
+        android:text="Set"
         app:layout_constraintTop_toBottomOf="@id/tv_telephony_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_start_service"/>
+        app:layout_constraintStart_toEndOf="@+id/et_server_ip"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/btn_start_service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Start Service"
-        app:layout_constraintTop_toBottomOf="@id/tv_telephony_title"
-        app:layout_constraintStart_toEndOf="@+id/btn_open_sockets"
+        android:text="Start"
+        app:layout_constraintTop_toBottomOf="@id/et_server_ip"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_refresh_cells"/>
+
+    <Button
+        android:id="@+id/btn_refresh_cells"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Refresh Cells"
+        app:layout_constraintTop_toBottomOf="@id/et_server_ip"
+        app:layout_constraintStart_toEndOf="@+id/btn_start_service"
         app:layout_constraintEnd_toStartOf="@+id/btn_stop_service"/>
 
     <Button
@@ -43,9 +64,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Stop Service"
-        app:layout_constraintTop_toBottomOf="@id/tv_telephony_title"
-        app:layout_constraintStart_toEndOf="@+id/btn_start_service"
+        android:text="Stop"
+        app:layout_constraintTop_toBottomOf="@id/et_server_ip"
+        app:layout_constraintStart_toEndOf="@+id/btn_refresh_cells"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ScrollView

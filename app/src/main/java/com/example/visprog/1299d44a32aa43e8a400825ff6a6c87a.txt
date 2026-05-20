@@ -1,0 +1,1170 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\begin{quote}
+МИНИСТЕРСТВО ЦИФРОВОГО РАЗВИТИЯ, СВЯЗИ И МАССОВЫХ
+
+КОММУНИКАЦИЙ\\
+РОССИЙСКОЙ ФЕДЕРАЦИИ
+
+Федеральное государственное бюджетное образовательное учреждение высшего
+образования\\
+''\textless Сибирский государственный университет телекоммуникаций и
+информатики''\textgreater{}
+
+Кафедра телекоммуникационных систем и вычислительных средств (ТС и ВС)
+
+РГР\\
+по\\
+дисциплине\\
+\emph{''\textless Визуальное программирование и человеко -- машинное
+взаимодействие''\textgreater{}}
+
+по теме:\\
+ПРОГРАММНО -- АППАРАТНЫЙ КОМПЛЕКС
+
+Студент:
+
+\emph{Группа № ИКС-431} \emph{К.Е. Шеин}Предподаватель:
+
+\emph{Старший преподаватель} \emph{Р.В.}
+
+\emph{Ахпашев}Новосибирск 2026 г.
+\end{quote}
+
+\textbf{СОДЕРЖАНИЕ}
+
+\begin{quote}
+ВВЕДЕНИЕ.....................................................................\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots3
+
+ТЕОРИЯ...............................................................................................................4
+
+ЛАБОРАТОРНЫЕ РАБОТЫ И МЕТОДЫ ИХ РЕШЕНИЯ..................\ldots\ldots.6
+
+Местоположение смартфона.
+Location......................................\ldots...................6
+
+Работа с сокетами (ZMQ). Передача данных от Android к
+PC.......................8
+
+Backend-сервер на
+CXX...................................\ldots\ldots...................................\ldots..10
+
+Android
+Cellinfo......................\ldots................................................................\ldots...13
+
+Android background
+service......................\ldots\ldots.............................................\ldots15
+
+Драйв-тест...................\ldots\ldots\ldots....................................................................\ldots...16
+
+Работа с базой данных (PostgreSQL) из
+С/С++........................................\ldots..17
+
+Отрисовка OpenStreetMap
+карты.........................\ldots........................................19
+
+Heatmap.......................................................................................................\ldots...21
+
+ЗАКЛЮЧЕНИЕ...........................................................................................\ldots..26
+
+СПИСОК ИСПОЛЬЗОВАННЫХ
+ИСТОЧНИКОВ...........................\ldots\ldots....28
+\end{quote}
+
+2
+
+\textbf{ВВЕДЕНИЕ}
+
+\begin{quote}
+В рамках учебного курса за текущий год был реализован комплексный
+проект, охватывающий ключевые аспекты современной разработки
+инфокоммуникационных систем: от низкоуровневой оптимизации и сбора
+телеметрии до построения облачной серверной архитектуры и разработки
+мобильных интерфейсов.
+
+Объектом данной работы является программно-аппаратный комплекс (ПАК) для
+мониторинга и визуализации геоданных и параметров качества радиосигнала.
+В ходе выполнения практических работ (№6--15) был пройден полный цикл
+разработки системы:
+
+Сбор и обработка данных (уровень устройства): На начальных этапах
+основное внимание уделялось работе с геоданными (координаты LLA ---
+Latitude, Longitude, Altitude) и параметрами мобильной сети. Были
+изучены принципы функционирования сетей GSM и LTE, а также метрики
+качества сигнала, такие как RSSI и RSRP, что критически важно для
+понимания зоны покрытия и стабильности связи.
+
+Проектирование серверной части (Backend): Для обеспечения высокой
+производительности и надежности обмена данными между мобильными
+клиентами и хранилищем был разработан сервер на языке C+ +. В качестве
+протокола передачи сообщений был выбран ZMQ (ZeroMQ), обеспечивающий
+асинхронную и быструю доставку пакетов телеметрии.
+
+Хранение и визуализация данных: Для структурированного хранения
+информации была спроектирована реляционная база данных PostgreSQL.
+Визуализация данных реализована через графический интерфейс на базе
+библиотеки ImGui, где ключевой задачей стала отрисовка карт и тепловых
+карт (heatmaps).
+
+Мобильная разработка (Android): Реализовано клиентское приложение,
+выступающее в роли основного датчика и интерфейса пользователя «в поле»,
+обеспечивающее сбор данных в реальном времени и их отправку на сервер.
+\end{quote}
+
+3
+
+\textbf{ТЕОРИЯ}
+
+\begin{quote}
+Для определения местоположения ПАК в пространстве используется система
+координат LLA (Latitude, Longitude, Altitude). Она базируется на
+геодезической модели Земли, где планета представляется в виде
+эллипсоида. Широта (Latitude): Угол между плоскостью экватора и нормалью
+к поверхности эллипсоида в данной точке. Измеряется от -90 до +90
+градусов. Долгота (Longitude): Угол между плоскостью нулевого
+(Гринвичского) меридиана и плоскостью меридиана, проходящего через
+точку. Измеряется от -180 до +180 градусов. Высота (Altitude):
+Расстояние от поверхности эллипсоида до точки по нормали. В задачах
+телеметрии важна для учета рельефа и высоты подвеса антенн.
+
+В реализованном программном обеспечении координаты LLA преобразуются в
+пиксельные координаты экранного пространства с использованием проекции
+Меркатора, что позволяет накладывать данные на растровые карты
+(PNG-тайлы).
+
+Современные системы мониторинга радиосигнала работают в многостандартных
+сетях. Основное различие между ними заключается в топологии и способах
+передачи данных. GSM (2G): Имеет иерархическую структуру. Абонентское
+устройство (MS) подключается к базовой станции (BTS), которые
+управляются контроллерами (BSC). Голос и данные разделены на уровне
+коммутации. LTE (4G): Полностью пакетная архитектура (All-IP). Основным
+элементом является eNodeB
+\end{quote}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+(усовершенствованная
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+базовая
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+станция),
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+которая
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+напрямую
+\end{quote}
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+\begin{quote}
+взаимодействует с ядром сети (EPC --- Evolved Packet Core). Это
+минимизирует задержки, что критично для передачи телеметрии в реальном
+времени через ZMQ.
+
+Критерии качества принятого радиосигнала: для оценки состояния канала
+связи в ПАК используются специфические метрики, которые считываются с
+Android-устройства и передаются на сервер.
+
+RSSI (Received Signal Strength Indicator) Общий индикатор мощности
+принимаемого сигнала. Измеряется в дБм (dBm).
+
+\emph{RSSI}=10 log\textless10\textgreater( \emph{P}/1\emph{mW})
+
+RSSI учитывает всю энергию в полосе частот, включая полезный сигнал, шум
+и интерференцию. Значения обычно варьируются от -50 дБм (отличный
+сигнал) до -110 дБм (связь почти отсутствует).
+\end{quote}
+
+4
+
+\begin{quote}
+RSRP (Reference Signal Received Power) --- для сетей LTE. Ключевой
+параметр в сетях 4G. В отличие от RSSI, RSRP измеряет мощность только
+опорных сигналов (Reference Signals). Это позволяет более точно оценить
+уровень покрытия конкретной базовой станции без учета шумов в канале.
+Если RSRP \textgreater{} -80 дБм --- сигнал отличный. Если RSRP
+\textless{} -110 дБм --- возможны обрывы соединения. В проекте данные
+показатели используются для построения тепловых карт (heatmaps), где
+цвет точки на карте соответствует уровню RSRP/RSSI, позволяя визуально
+оценить «мертвые зоны» покрытия.
+\end{quote}
+
+5
+
+\begin{quote}
+\textbf{ЛАБОРАТОРНЫЕ РАБОТЫ И МЕТОДЫ ИХ РЕШЕНИЯ}
+
+\textbf{1.1} \textbf{Местоположение смартфона. Location}
+
+Цель: получить доступ к данным о местоположении Androidтелефона и
+вывести на экран значения.
+
+В ходе выполнения работы было разработано отдельное окно приложения.
+Основная логика работы с геопозиционированием строилась на
+взаимодействии с системным сервисом местоположения.
+
+Основные этапы реализации:\\
+• Управление разрешениями: Поскольку данные о местоположении относятся к
+категории чувствительных данных (Privacy), в манифесте приложения и в
+коде на Kotlin была реализована проверка и запрос разрешений
+ACCESS\_FINE\_LOCATION (точное местоположение по GPS) и
+ACCESS\_COARSE\_LOCATION (приблизительное по вышкам сотовой связи и
+Wi-Fi).
+
+• Работа с LocationManager: С помощью системного API был получен доступ
+к объекту Location. Для оптимизации энергопотребления и скорости
+получения данных использовался метод getLastLocation(), который
+позволяет мгновенно получить последние известные координаты,
+зафиксированные системой, без принудительного «холодного старта»
+GPS-модуля.
+
+• Данные сохранялись в формате JSON, что обеспечило структурированность
+лога и удобство его последующего парсинга.
+
+Каждая запись в файле представляет собой объект с полным набором
+навигационных параметров и временем фиксации.
+
+В предоставленном фрагменте файла Manifest.xml демонстрируется запрос
+разрешений на получение данных о Location. Без этой части основной
+activity просто не заработает.
+\end{quote}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.0000}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+\textless uses-permission\\
+android:name="android.permission.ACCESS\_FINE\_LOCATION" /\textgreater{}
+\end{quote}\strut
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+6
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.0000}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+\textless uses-permission\\
+android:name="android.permission.ACCESS\_COARSE\_LOCATION"
+/\textgreater{}
+
+\textless uses-permission\\
+android:name="android.permission.READ\_EXTERNAL\_STORAGE"
+android:maxSdkVersion="32"\\
+tools:ignore="ScopedStorage" /\textgreater{}
+
+\textless uses-permission\\
+android:name="android.permission.READ\_MEDIA\_AUDIO" /\textgreater{}\\
+\textless uses-permission\\
+android:name="android.permission.READ\_EXTERNAL\_STORAGE"
+android:maxSdkVersion="32"\\
+tools:ignore="ScopedStorage" /\textgreater{}
+\end{quote}\strut
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+Выполненную
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+работу
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+можно
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+проверить
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+в
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+\begin{quote}
+репозитории:
+\end{quote}
+
+7
+
+\begin{quote}
+\textbf{1.2Работа с сокетами (ZMQ). Передача данных от Android к PC}
+
+Цель работы: Изучение высокоуровневых механизмов работы с сетевыми
+сокетами через библиотеку ZMQ, реализация устойчивого канала связи между
+мобильным устройством (Android) и персональным компьютером для передачи
+телеметрии.
+
+В ходе выполнения данной работы классическая модель сокетов была
+заменена на более гибкую и производительную архитектуру ZMQ, что
+позволило обеспечить надежную доставку сообщений между разнородными
+узлами системы. Основные этапы:
+
+• Разработка внутреннего механизма на Android: В мобильном приложении
+была реализована новая активность, в которой тестировалась работа
+ZMQ-узлов внутри самого устройства. Для изоляции нового функционала и
+соблюдения правил командной разработки, все изменения вносились в
+отдельную ветку (branch) репозитория. Был реализован асинхронный запуск
+клиента и сервера, что позволило приложению отправлять и принимать
+данные «самому себе» для проверки корректности работы библиотеки в среде
+Android.
+
+• Настройка сетевого окружения: Для обеспечения связи между смартфоном и
+компьютером, на домашнем маршрутизаторе был открыт определённый порт.
+Особое внимание уделялось определению IP-адресов узлов, на мобильном
+устройстве можно указать конкретный сокет. Android-устройство было
+настроено на работу в режиме клиента, инициирующего соединение с
+сервером на ПК.
+
+• Сбор и аналитика данных на сервере: В функционал сервера была заложена
+логика накопления информации. Каждый блок данных, поступивший с
+мобильного клиента, фиксировался в json файле.
+
+• Контроль версий и интеграция: После успешного тестирования передачи
+данных между смартфоном и ПК, функционал из экспериментальной ветки
+Android-приложения был перенесен в основную. Все серверные скрипты были
+закоммичены в основной репозиторий проекта, фиксируя стабильное
+состояние системы.
+\end{quote}
+
+8
+
+\includegraphics[width=3.31389in,height=7.17639in]{vertopal_1299d44a32aa43e8a400825ff6a6c87a/media/image1.png}
+
+\begin{quote}
+\emph{Рисунок 1: Скриншот ПО для смартфона на}\\
+\emph{android. Передача пакетов серверу.}
+
+Выполненная работа содержится в репозитории:
+\end{quote}
+
+9
+
+\textbf{1.3 Backend-сервер на CXX}
+
+\begin{quote}
+Цель: Реализация серверной логики на языке C++ для обеспечения
+\end{quote}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+максимальной
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+производительности,
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+реализация
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+многопоточной
+\end{quote}
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+\begin{quote}
+архитектуры приложения и создание графической оболочки на базе
+библиотеки ImGui для визуализации телеметрии в реальном времени.
+
+Архитектура и стек технологий: Серверная часть была полностью переписана
+на C++. В качестве системы сборки использован CMake, что позволило
+удобно управлять внешними зависимостями. Библиотеки ImGui и ImPlot были
+интегрированы в проект как git submodules, обеспечивая чистоту структуры
+репозитория и простоту развертывания на ОС Ubuntu.
+
+Многопоточность и синхронизация (Thread \& Mutex): Ключевой особенностью
+реализации стало разделение логики на два независимых потока. Сетевой
+поток (zmq\_server): Работает в фоновом режиме, обеспечивая постоянное
+прослушивание порта. Реализована логика автоматического переподключения
+клиента и подтверждения приема данных (ответ "OK"). Поток визуализации
+(Main/GUI): Отвечает за отрисовку окна приложения и графиков. Связующим
+звеном выступила глобальная структура TelemetryData, защищенная
+мьютексом (std::mutex). Это гарантирует, что при одновременном доступе
+(сервер записывает координаты, а GUI их читает) не возникнет состояния
+гонки (race condition) или повреждения данных.
+
+Обработка и парсинг данных: Данные от Android-приложения поступают в
+формате JSON. Для их обработки была написана функция парсинга find\_val,
+которая извлекает значения широты, долготы, высоты и параметров
+радиосигнала (RSRP). Помимо структурированных данных, в системе
+сохраняется «сырая» строка (raw json), что полезно для отладки и
+контроля полноты передаваемой информации.
+
+Графический интерфейс (ImGui \& ImPlot): Был разработан плот в котором в
+реальном времени обновляются текстовые поля с координатами и качеством
+сигнала. Использование ImPlot позволило подготовить базу для будущей
+визуализации графиков и карт. Особенностью реализации
+\end{quote}
+
+10
+
+\begin{quote}
+является вывод «сырого» лога сообщений прямо в окне программы, что
+делает интерфейс информативным и удобным для мониторинга.
+
+Часть кода, отвечающая за основной графический цикл в программе:
+\end{quote}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.0000}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+while (running) \{\\
+SDL\_Event event;\\
+while (SDL\_PollEvent(\&event)) \{\\
+ImGui\_ImplSDL2\_ProcessEvent(\&event);\\
+if (event.type == SDL\_QUIT) running = false; \}
+
+ImGui\_ImplOpenGL3\_NewFrame();\\
+ImGui\_ImplSDL2\_NewFrame();\\
+ImGui::NewFrame();\\
+ImGui::DockSpaceOverViewport(0, nullptr, ImGuiDockNodeFlags\_None);
+
+\{\\
+static int counter = 0;\\
+ImGui::Begin("smartphone data");
+
+ImGui::Text("data from smartphone received:"); ImGui::Separator();
+
+\{\\
+lock\_guard\textless mutex\textgreater{} lock(g\_data.mtx);\\
+ImGui::Text("Latitude: \%.6f", g\_data.lat); ImGui::Text("Longitude:
+\%.6f", g\_data.lon); ImGui::Text("Altitude: \%.2f m", g\_data.alt);
+ImGui::Text("Accuracy: \%.1f m", g\_data.acc);
+\end{quote}\strut
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+11
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.0000}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+ImGui::Separator();\\
+ImGui::Text("Net Type: \%s", g\_data.type.c\_str());\\
+ImGui::Text("RSRP: \%d dBm", g\_data.rsrp);\\
+ImGui::TextUnformatted(g\_data.raw.c\_str()); \}
+
+ImGui::Separator();\\
+if (ImGui::Button("Button")) counter++; ImGui::Text("counter = \%d",
+counter); ImGui::End();\\
+\}
+
+ImGui::Render();\\
+glClearColor(0.1f, 0.1f, 0.1f, 1.0f);\\
+glClear(GL\_COLOR\_BUFFER\_BIT);\\
+ImGui\_ImplOpenGL3\_RenderDrawData(ImGui::GetDrawData());
+SDL\_GL\_SwapWindow(window);\\
+\}
+\end{quote}\strut
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+\begin{quote}
+Разработано стабильное серверное приложение на C++, обеспечивающее
+параллельную работу сетевого стека и графической оболочки. Система
+корректно принимает телеметрию, сохраняет её в памяти и отображает
+пользователю актуальные параметры местоположения и состояния сети.
+Намечен план по интеграции базы данных PostgreSQL и отрисовке карт
+Меркатора для перехода к финальной стадии проекта.
+
+Работа представлена в ранних коммитах репозитория
+https://github.com/thausoma/visuals-zmq-map
+\end{quote}
+
+12
+
+\textbf{1.4 Android Cellinfo.}
+
+\begin{quote}
+Цель работы: Реализация функционала по извлечению детальной информации о
+параметрах базовых станций и характеристиках радиосигнала для сетей
+стандартов GSM, LTE и 5G (NR), а также синхронизация этих данных с
+навигационными параметрами устройства.
+
+Формирование комплексного пакета данных: Вся собранная информация
+(сетевые идентификаторы, уровни сигнала и координаты) упаковывается в
+единую структуру. Это обеспечивает атомарность данных: каждый пакет
+содержит полную «картину мира» в конкретный момент времени --- где
+находилось устройство и что оно «видело» в радиоэфире.
+
+Функция ``parse\_json\_to\_data'' предназначена для парсинга данных,
+обозначенных в данной части работы:
+\end{quote}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.0000}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+void parse\_json\_to\_data(string raw) \{
+lock\_guard\textless mutex\textgreater{} lock(g\_data.mtx); g\_data.raw
+= raw;
+
+g\_data.lat = stof(find\_val(raw, "Latitude")); g\_data.lon =
+stof(find\_val(raw, "Longitude")); g\_data.alt = stof(find\_val(raw,
+"Altitude")); g\_data.acc = stof(find\_val(raw, "Accuracy"));
+g\_data.type = find\_val(raw, "Net Type");\\
+g\_data.rsrp = stoi(find\_val(raw, "RSRP"));\\
+string time\_str = find\_val(raw, "Current Time"); if (time\_str == "0")
+return;
+
+double current\_ts = stod(time\_str) / 1000.0; if
+(g\_data.base\_timestamp == 0) \{\\
+g\_data.base\_timestamp = current\_ts;\\
+\}
+\end{quote}\strut
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+13
+
+\begin{quote}
+Разработано мощное диагностическое приложение, которое превращает
+обычный смартфон в измерительный комплекс.
+
+Сформированный поток телеметрии теперь содержит исчерпывающую информацию
+для детального анализа радиоэфира, которая в реальном времени
+транслируется на C++ Backend через ZMQ-шину.
+\end{quote}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+Результаты
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+работы
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+предоставлены
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+в
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+репозитории
+\end{quote}
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+14
+
+\begin{quote}
+\textbf{1.6 Android background service.}
+
+Цель работы: Обеспечение стабильного сбора телеметрии в фоновом режиме
+на стороне Android и реализация инструментов ретроспективного анализа
+данных (графиков мощности сигнала) с помощью библиотеки ImPlot на C++.
+Android: Фоновый сервис (Background Service): Для того чтобы сбор данных
+не прекращался при выключении экрана или сворачивании приложения.
+
+Жизненный цикл: Сервис настроен на работу в режиме, позволяющем ОС не
+выгружать его из памяти при нехватке ресурсов, что критически важно для
+проведения длительных сессий мониторинга (драйв-тестов).
+
+Визуализация через ImPlot. В графический интерфейс был добавлен раздел
+Signal Level History. Вместо простого вывода цифр была реализована
+отрисовка многоканального осциллографа.
+
+Динамика: Каждая базовая станция (LTE или GSM) отображается отдельной
+линией своего цвета. Это позволяет наглядно увидеть процесс
+«переприемки» (handoff) сигнала между сотами.
+\end{quote}
+
+\includegraphics[width=6.94306in,height=3.52083in]{vertopal_1299d44a32aa43e8a400825ff6a6c87a/media/image2.png}
+
+\begin{quote}
+\emph{Рисунок 2: Скриншот из backend - приложения на C++,
+демонстрирующий построение графиков RSRP от разных базовых станций.}
+\end{quote}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+Работу
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+можно
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+найти
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+в
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+репозитории
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+15
+
+\textbf{1.7 Драйв-тест.}
+
+\begin{quote}
+Цель работы: Валидация работоспособности ПАК в реальных условиях
+городской застройки, сбор массива телеметрических данных (радиочастотных
+параметров и координат) для последующего анализа качества покрытия
+мобильной сети.
+
+Методика проведения измерений: Для сбора данных использовался смартфон с
+установленным приложением, работающим в фоновом режиме (согласно
+наработкам Практической работы №11). Это позволило фиксировать параметры
+сети, не отвлекаясь на интерфейс устройства во время перемещения по
+городу. Маршруты драйв-теста охватывали различные типы городской
+застройки: от открытых пространств до районов с плотной высотной
+застройкой, где наблюдается эффект многолучевого распространения
+сигнала.
+
+Сбор статистики осуществлялся в формате \textbf{JSON}, полностью
+соответствующем спецификациям, разработанным в Практической работе №10.
+\end{quote}
+
+16
+
+\begin{quote}
+\textbf{1.8 Работа с базой данных (PostgreSQL) из С/С++}
+
+Цель работы: Реализация системы долгосрочного хранения телеметрии с
+использованием СУБД PostgreSQL, настройка контейнеризированной среды
+базы данных и разработка механизмов записи данных из C++ в реальном
+времени.
+
+Контейнеризация и развертывание БД: Для обеспечения переносимости и
+быстрой настройки среды была использована технология Docker. С помощью
+файла docker-compose.yml был развернут контейнер с образом
+postgres:16-alpine.
+
+Проектирование схемы данных: В базе данных была создана таблица, поля
+которой строго соответствуют собираемой телеметрии:\\
+навигационные данные (широта, долгота, высота), идентификаторы сот (PCI,
+MCC, MNC) и ключевые радиочастотные метрики (RSRP, RSSI, SINR). Каждая
+запись снабжена временной меткой для корректного построения временных
+рядов.
+
+Разработка C++ модуля взаимодействия (libpq): В Backend-сервер был
+интегрирован программный интерфейс libpq. Реализована следующая логика:
+Соединение: При запуске сервер устанавливает сессию с базой данных.
+Транзакционная запись: Каждое входящее JSON-сообщение от Android-клиента
+после парсинга преобразуется в SQL-запрос INSERT. Запись в базу
+происходит в сетевом потоке, что не нагружает графический интерфейс.
+
+Backend-сервер превратился в полноценную аналитическую платформу.
+Система успешно аккумулирует данные в СУБД PostgreSQL, обеспечивая
+сохранность результатов драйв-тестов, и одновременно предоставляет
+наглядный графический интерфейс для мониторинга активных и соседних сот
+со всеми ключевыми характеристиками радиосигнала.
+
+Нормализация «Один-ко-многим». Разбиение на две таблицы (measurements и
+cell\_data) --- это классическое решение проблемы многоканальности. В
+один момент времени смартфон может «видеть» одну обслуживающую соту и до
+6--10 соседних.
+\end{quote}
+
+17
+
+\begin{quote}
+Каскадное удаление (ON DELETE CASCADE). Это механизм «автоматической
+гигиены». Поскольку cell\_data не имеет смысла без привязки к
+координатам из measurements, каскадное удаление позволяет одной командой
+очистить неудачный драйв-тест целиком. Это упрощает логику
+backend-сервера на C++, так как ему не нужно вручную чистить обе
+таблицы.
+\end{quote}
+
+\includegraphics[width=2.5875in,height=7.65417in]{vertopal_1299d44a32aa43e8a400825ff6a6c87a/media/image3.png}
+
+\begin{quote}
+\emph{Рисунок 3: Схема таблиц в базе}\\
+\emph{данных серверного приложения.}
+\end{quote}
+
+18
+
+\begin{quote}
+\textbf{1.9Отрисовка OpenStreetMap карты}
+
+Цель работы: Разработка модуля интерактивной карты, реализующего
+динамическую загрузку тайлов OSM, преобразование географических
+координат в экранные и наложение телеметрического трека на
+картографическую подложку.
+
+Математический аппарат (Проекция Меркатора):\\
+Для отображения сферических координат Земли на плоскость реализованы
+функции преобразования lon2tile и lat2tile. Система поддерживает
+динамический расчет уровня масштабирования (zoom) в зависимости от
+текущих границ окна ImPlot, что позволяет плавно переходить от обзора
+города к детализации отдельных улиц.
+
+\includegraphics[width=6.51111in,height=5.29583in]{vertopal_1299d44a32aa43e8a400825ff6a6c87a/media/image4.png}
+
+\emph{Рисунок 4: Скриншот из приложения. OSM карта с маршрутом снятия
+данных.}
+\end{quote}
+
+19
+
+\begin{quote}
+Асинхронный механизм загрузки тайлов: Сбор данных из сети реализован
+через библиотеку libcurl. Многопоточность: Чтобы графический интерфейс
+не «фризился» во время ожидания ответа от сервера OSM, загрузка каждого
+тайла вынесена в отдельный поток (std::thread).
+
+Локальное кеширование: Реализована иерархическая система хранения данных
+в директории tiles/\{z\}/\{x\}/\{y\}.png. Перед запросом в сеть сервер
+проверяет наличие файла на диске, что радикально снижает нагрузку на
+канал связи и ускоряет рендеринг.
+
+Управление видеопамятью и текстурами:\\
+С помощью библиотеки stb\_image загруженные .png файлы декодируются в
+RAW-массивы пикселей (RGBA) и передаются в видеопамять как текстуры
+OpenGL (GLuint). Для оптимизации ресурсов реализован менеджер кеша
+текстур (tile\_cache), который предотвращает утечки памяти при
+длительной работе программы.
+
+Рефакторинг и архитектура:\\
+Проведен глобальный рефакторинг проекта. Логика работы с картой, базой
+данных, сетевыми сокетами и отрисовкой GUI разнесена по отдельным
+модулям (Map.cpp, CurlFunc.cpp, Database.cpp), что соответствует
+принципам SOLID и упрощает дальнейшую поддержку кода.
+
+Создан высокопроизводительный инструмент визуализации, способный в
+реальном времени отображать маршрут драйв-теста на подробной карте мира.
+Система автоматически подгружает необходимые фрагменты карты, сохраняет
+их для офлайн-использования и обеспечивает плавную навигацию.
+\end{quote}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+Результаты
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+в
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+коммите:
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+e9687ad
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Репозитория
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+\begin{quote}
+github.com/thausoma/visuals-zmq-map/
+\end{quote}
+
+20
+
+\textbf{1.10 Heatmap}
+
+\begin{quote}
+Цель работы: Реализация алгоритма пространственной интерполяции IDW для
+создания визуального слоя тепловых карт, позволяющего анализировать
+радиочастотное покрытие по различным критериям (RSRP, RSRQ, RSSI,
+Altitude).
+
+В ходе выполнения работы была разработана система генерации растровых
+оверлеев, которые накладываются поверх карты OpenStreetMap и наглядно
+демонстрируют «мертвые зоны» и участки с отличным приемом.
+
+Для заполнения пространства между точками измерений был реализован метод
+Inverse Distance Weighting (IDW). Суть метода заключается в том, что
+значение в искомой точке является средневзвешенным от значений
+окружающих её реальных точек измерений.
+
+Весовой коэффициент: Влияние точки обратно пропорционально расстоянию до
+неё в степени p (обычно p=2). Радиус влияния: Чтобы избежать искажений
+от слишком удаленных базовых станций, в алгоритм заложено ограничение
+радиуса интерполяции (от 10 до 40 метров). Если в заданном радиусе нет
+реальных измерений, пиксель остается прозрачным.
+
+Вычисление тепловой карты --- ресурсоемкая операция, требующая обхода
+тысяч пикселей и сопоставления их с тысячами записей в БД.
+
+Отдельный поток: Математические расчеты вынесены в фоновый поток, что
+позволяет GUI-интерфейсу оставаться отзывчивым.
+
+Синхронизация: После завершения расчетов поток обновляет флаг
+heatmap\_ready и генерирует текстуру, которая затем безопасно
+считывается основным потоком для отрисовки.
+
+В интерфейс ImGui добавлен селектор, позволяющий «на лету» менять
+критерий построения карты: RSRP / RSSI / RSRQ: Параметры мощности и
+качества сигнала. Altitude: Визуализация рельефа местности.
+\end{quote}
+
+21
+
+\begin{quote}
+Фильтр по EARFCN: Возможность строить карту отдельно для каждого
+частотного канала, что критично для анализа работы конкретных несущих
+частот оператора.
+
+Реализована динамическая шкала градиента. Для RSRP использована
+классическая инженерная палитра:
+
+Excellent (\textgreater-80 дБм): Красный цвет (максимальная мощность).
+
+Good / Fair (-80...-100 дБм): Переходные желто-зеленые тона.
+
+Poor / Weak (-100...-110 дБм): Темно-синий цвет.
+
+Unusable (\textless-110 дБм): Полная прозрачность (отсутствие связи).
+
+Тепловая карта генерируется в виде растрового слоя, адаптированного под
+текущий zoom и координаты. Полученные изображения кэшируются в
+директории build/, что исключает необходимость повторных расчетов при
+простом перемещении по карте. Отрисовка в ImPlot реализована через
+функцию PlotImage, что обеспечивает идеальное совмещение тепловой карты
+с подложкой OSM.
+\end{quote}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+Итоговая
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+архитектура
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+данных
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+проекта:
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.0000}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+struct TelemetryData\\
+\{ float lat = 0,\\
+lon = 0, alt = 0, acc\\
+= 0; int rsrp = 0;\\
+std::string type = "";\\
+std::string raw = "";\\
+std::mutex mtx;\\
+bool db\_connected =\\
+false; std::string\\
+data\_source = "None";
+
+std::map\textless std::string,\\
+CellHistory\textgreater{} cell\_logs;\\
+std::vector\textless double\textgreater{} history\_lat;
+std::vector\textless double\textgreater{} history\_lon;
+\end{quote}\strut
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+22
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 0\tabcolsep) * \real{1.0000}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+std::vector\textless double\textgreater{} history\_time;
+
+double\\
+base\_timestamp = 0;\\
+float view\_min\_time\\
+= 0; float\\
+view\_max\_time =\\
+100; float\\
+max\_recorded\_time =\\
+100;
+
+double heatmap\_min\_lat = 0,\\
+heatmap\_max\_lat = 0; double\\
+heatmap\_min\_lon = 0, heatmap\_max\_lon = 0; int heatmap\_zoom = 15;\\
+bool heatmap\_ready = false;\\
+std::string heatmap\_earfcn = "";\\
+std::string heatmap\_criterion = "";
+
+void clear\_all() \{ ... \}\\
+\}; extern\\
+TelemetryData\\
+g\_data;
+\end{quote}\strut
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+\includegraphics[width=7.04028in,height=3.21805in]{vertopal_1299d44a32aa43e8a400825ff6a6c87a/media/image5.png}
+
+\begin{quote}
+\emph{Рисунок 5: Схема backend - сервера на C++}
+\end{quote}
+
+23
+
+\includegraphics[width=6.81528in,height=9.23056in]{vertopal_1299d44a32aa43e8a400825ff6a6c87a/media/image6.png}
+
+\emph{Рисунок 6: Полное схематичное представление программно -
+аппаратного комплекса}
+
+24
+
+\includegraphics[width=6.825in,height=3.86528in]{vertopal_1299d44a32aa43e8a400825ff6a6c87a/media/image7.png}
+
+\begin{quote}
+\emph{Рисунок 7: Скриншот готового к работе backend - сервера на C++.
+(построен heatmap)}
+\end{quote}
+
+25
+
+\textbf{ЗАКЛЮЧЕНИЕ.}
+
+\begin{quote}
+За прошедший учебный год в рамках цикла лабораторных работ был пройден
+путь от создания простейших мобильных экранных форм до разработки
+полноценного программно-аппаратного комплекса (ПАК) для радиочастотного
+мониторинга. В процессе работы были освоены и закреплены на практике
+следующие ключевые компетенции.
+
+Проектирование распределенных систем: В работах получены навыки
+связывать в единую экосистему компоненты, написанные на разных языках и
+работающие на разных платформах. Взаимодействие между Android-
+\end{quote}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1667}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+\begin{quote}
+клиентом
+\end{quote}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+(Kotlin)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+и
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Backend-сервером
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+(C++)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+через
+\end{minipage} \\
+\midrule()
+\endhead
+\bottomrule()
+\end{longtable}
+
+\begin{quote}
+высокопроизводительную шину сообщений ZeroMQ позволило понять принципы
+построения отказоустойчивых сетевых архитектур.
+
+Низкоуровневая работа с данными сотовых сетей: Был получен глубокий
+практический опыт работы с подсистемами ОС Android (TelephonyManager,
+Location). Я изучил физический смысл параметров радиосигнала (RSRP,
+RSSI, SINR) и научился извлекать их в реальном времени, превращая
+обычный смартфон в измерительный прибор.
+
+Высокопроизводительная визуализация на C++: Освоение библиотек ImGui и
+ImPlot позволило реализовать графический интерфейс, способный
+обрабатывать и отрисовывать большие массивы данных без потери
+производительности. Я научился работать с графическим конвейером OpenGL,
+загружать текстуры и управлять ими в видеопамяти.
+
+Работа с ГИС и картографией: Одним из самых сложных и интересных этапов
+стало внедрение карт OpenStreetMap. Я освоил математические основы
+проекции Меркатора, реализовал алгоритмы асинхронной загрузки тайлов
+через libcurl и систему их локального кеширования, что позволило
+визуализировать результаты драйв-тестов на реальной местности.
+
+Системное мышление и управление данными. Интеграция СУБД PostgreSQL и
+контейнеризация через Docker заложили фундамент для работы с «большими
+данными». Я научился проектировать реляционные схемы для хранения
+телеметрии и обеспечивать целостность данных при многопоточном доступе.
+\end{quote}
+
+26
+
+\begin{quote}
+Инженерная культура и рефакторинг: Разработка такого масштабного проекта
+приучила к дисциплине в использовании систем контроля версий (Git),
+написанию понятной документации в README и постоянному рефакторингу кода
+для разделения сущностей и повышения читаемости проекта.
+\end{quote}
+
+27
+
+\begin{quote}
+\textbf{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}
+
+1. Ахпашев Р.В. Визуальное программирование: методические указания к
+лабораторным работам {[}Электронный ресурс{]}. --- URL:
+https://telecomdep.github.io/notes/HomeWork/home\_work.html\\
+(дата обращения: 13.05.2026).
+\end{quote}
+
+28
+
+\end{document}

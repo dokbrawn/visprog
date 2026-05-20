@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">SibgutiAndroidVisp</string>
+    <string name="latitude_format">Широта: %1$s</string>
+    <string name="longitude_format">Долгота: %1$s</string>
+    <string name="altitude_format">Высота: %1$s</string>
+    <string name="waiting">ожидание</string>
+    <string name="service_waiting">Сервис запущен, ожидаем сигнал…</string>
+    <string name="location_permission_required">Разрешение на геолокацию необходимо для работы</string>
+    <string name="service_started">Сервис запущен</string>
+    <string name="service_stopped">Сервис остановлен</string>
+    <string name="log_empty">Файл логов пуст или еще не создан</string>
+    <string name="log_title">Локальный лог местоположения</string>
+    <string name="server_ip_saved">IP Saved: %1$s</string>
 </resources>
